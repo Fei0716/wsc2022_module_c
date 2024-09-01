@@ -17,11 +17,26 @@ class CheckBlockStatus
     {
         //check whether the user is blocked
         if($request->user()->blocked_reason){
+            $block_message = '';
+            switch ($request->user()->blocked_reason){
+                case 'spam':
+                    $block_message = "You have been blocked for spamming";
+                    break;
+                case 'cheat':
+                    $block_message = "You have been blocked for cheating";
+                    break;
+                case 'other':
+                    $block_message = "You have been blocked by an administrator";
+                    break;
+                default:break;
+            }
+
+
             return response()->json([
                 "status"=> "blocked",
                 "message"=> "User blocked",
-                "reason" => "You have been blocked by an administrator"
-            ] , 403);
+                "reason" => $block_message
+            ] , 401);
         }
 
         return $next($request);

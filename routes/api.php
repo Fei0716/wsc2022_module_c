@@ -27,15 +27,16 @@ Route::prefix("v1")->group(function(){
     Route::middleware("auth:sanctum" , "check.block.status")->group(function(){
         Route::post("auth/signout" , [AuthController::class, "signout"]);
 
-
         //game
         Route::apiResource("games" , GameController::class)->except("index", "show");
+        Route::post("games/{game}/upload", [GameController::class , "uploadNewVersion"]);
 
         //score
-        Route::get("games/{game}/scores" , [ScoreController::class , "getHighscores"]);
         Route::post("games/{game}/scores" , [ScoreController::class , "postScore"]);
     });
     //user
     Route::get("users/{user}" , [UserController::class ,  "show"]);
     Route::apiResource("games" , GameController::class)->only("index", "show");
+    Route::get("games/{game}/scores" , [ScoreController::class , "getHighscores"]);
+
 });

@@ -13,7 +13,9 @@ class ScoreController extends Controller
 {
     public function getHighscores(Games $game, Request $request)
     {
-        $highscores = Score::select(DB::raw("max(score) as score, user_id, created_at" ))->whereIN("game_version_id", $game->gameVersions->pluck("id")
+        $highscores = Score::select(DB::raw("max(score) as score, user_id, created_at" ))->whereHas("user", function($query){
+           $query->whereNull("blocked_reason");
+        })->whereIN("game_version_id", $game->gameVersions->pluck("id")
         )->groupBy("user_id", "created_at")->get();
 
         $res = $highscores->map( function($h){

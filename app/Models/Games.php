@@ -21,10 +21,17 @@ class Games extends Model
     public function scores(){
         return $this->hasManyThrough(Score::class, GameVersion::class , "game_id", "game_version_id");
     }
+
+    public function latestVersion(){
+        return $this->gameVersions()->orderByDesc("id")->first();
+    }
+
     //adjust the params for the route of users
     public function getRouteKeyName()
     {
         return 'slug';
     }
+
+
 
 }
